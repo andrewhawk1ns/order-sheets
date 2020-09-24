@@ -12,7 +12,7 @@ Node: 12.18.3
 
 MySQL
 
-PHP: 7.3+
+PHP: 7.2.5+
 
 ### Install Dependencies
 
