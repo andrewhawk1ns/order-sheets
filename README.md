@@ -65,7 +65,7 @@ yarn test
 Server
 
 ```
-php artisan:test
+php artisan test
 ```
 
 ### Linting
