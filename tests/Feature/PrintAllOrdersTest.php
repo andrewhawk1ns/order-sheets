@@ -15,10 +15,7 @@ class ExampleTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $customer = factory(\App\Customer::class)->create();
-
         $response = $this->post('/api/print-sheets', [
-            'customer_id' => $customer->id,
             'type' => 'test',
         ]);
 
@@ -29,8 +26,8 @@ class ExampleTest extends TestCase
                 'type' => 'print-sheets',
                 'print_sheet_id' => $printSheet->id,
                 'attributes' => [
+                    'type' => 'test',
                     'sheet_url' => $printSheet->url,
-                    'posted_at' => $posts->last()->created_at->diffForHumans(),
                 ],
             ]],
         ]]);
