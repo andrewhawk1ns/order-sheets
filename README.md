@@ -16,9 +16,13 @@ PHP: 7.2.5+
 
 ### Install Dependencies
 
+Client
+
 ```
 yarn
 ```
+
+Server
 
 ```
 composer install
@@ -52,9 +56,13 @@ yarn dev
 
 ### Testing
 
+Client
+
 ```
 yarn test
 ```
+
+Server
 
 ```
 php artisan:test
