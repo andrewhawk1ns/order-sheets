@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\PrintSheet;
 use PHPUnit\Framework\TestCase;
 
-class PrintSheetTest extends TestCase
+class PrintSheetScanTest extends TestCase
 {
     public function setUp(): void
     {
@@ -15,23 +15,8 @@ class PrintSheetTest extends TestCase
 
         $this->columnBlock = $this->printSheetInstance->scanX(0, 0, 2);
 
-        $this->rowBlock = $this->printSheetInstance->scanY(0, 5);
+        $this->rowBlock = $this->printSheetInstance->scanY(0, 0, 5);
 
-    }
-
-    /** @test */
-    public function sheet_returns_correct_number_of_rows_and_columns()
-    {
-
-        $rows = $this->sheet->count();
-
-        $firstRow = $this->sheet->first();
-
-        $columns = count($firstRow);
-
-        $this->assertEquals($rows, 15);
-
-        $this->assertEquals($columns, 10);
     }
 
     /** @test */

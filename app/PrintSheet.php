@@ -17,7 +17,7 @@ class PrintSheet extends Model
 
     private $sheet;
 
-    private $availableIndex;
+    private $scanIndex;
 
     public function __construct()
     {
@@ -29,6 +29,11 @@ class PrintSheet extends Model
     public function getSheetAttribute()
     {
         return $this->sheet;
+    }
+
+    public function getTotalAvailableAttribute()
+    {
+        return $this->totalAvailable;
     }
 
     public function items()
@@ -43,45 +48,92 @@ class PrintSheet extends Model
      */
     public function createSheet()
     {
-        $sheet = $availableIndex = [];
+        $sheet = $scanIndex = [];
 
         for ($row = 0; $row < $this->rows; $row++) {
             for ($column = 0; $column < $this->columns; $column++) {
                 $sheet[$row][$column] = null;
-                $availableIndex[$row][] = $column;
+                $scanIndex[$row][] = $column;
             }
         }
 
         $this->sheet = collect($sheet);
 
-        $this->availableIndex = $availableIndex;
+        $this->scanIndex = $this->scanIndex = $scanIndex;
 
         return $this->sheet;
     }
 
-    public function addProduct($product)
+    public function scanNextAvailable($sizing)
     {
-        // Todo: Scan next available
+
+        $placed = false;
+
+        $xBlock = $yBlock = 0;
+
+        if ($sizing['height'] > count($this->scanIndex)) {
+            return $placed;
+        }
+
+        foreach ($this->scanIndex as $key => $row) {
+
+            if ($sizing['width'] > count($this->scanIndex[$key])) {
+                continue;
+            }
+
+            foreach ($this->scanIndex[$key] as $column) {
+
+                $yBlock = $this->scanY($column, $key, $sizing['height']);
+                $xBlock = $this->scanX($key, $column, $sizing['width']);
+
+                if (!!$yBlock && !!$xBlock) {
+
+                    $placed = true;
+
+                    $this->removeScanBlock($xBlock, $yBlock);
+
+                    $this->totalAvailable -= $sizing['height'] * $sizing['width'];
+
+                    break 2;
+                }
+            }
+        }
+
+        return $placed ? ['x' => $xBlock, 'y' => $yBlock] : false;
+    }
+
+    private function removeScanBlock($xBlock, $yBlock)
+    {
+        foreach ($yBlock as $row) {
+            foreach ($xBlock as $col) {
+                unset($this->scanIndex[$row][$col]);
+
+            }
+
+            if (count($this->scanIndex[$row]) === 0) {
+                unset($this->scanIndex[$row]);
+            }
+        }
 
     }
 
-    public function scanY($start, $height)
+    public function scanY($column, $start, $height)
     {
         $yBlock = range($start, $start + $height - 1);
 
-        $keys = array_keys($this->availableIndex);
+        $keys = array_keys($this->scanIndex);
 
         $available = false;
 
         foreach ($yBlock as $row) {
             $available = true;
-            if (!in_array($row, $keys)) {
+            if (!in_array($row, $keys) || !in_array($column, $this->scanIndex[$row])) {
                 $available = false;
                 break;
             }
         }
 
-        return !$available ?: $yBlock;
+        return $available ? $yBlock : false;
     }
 
     public function scanX($row, $start, $width)
@@ -93,13 +145,13 @@ class PrintSheet extends Model
         foreach ($xBlock as $column) {
             $available = true;
 
-            if (!in_array($column, $this->availableIndex[$row])) {
+            if (!in_array($column, $this->scanIndex[$row])) {
                 $available = false;
                 break;
             }
         }
 
-        return !$available ?: $xBlock;
+        return $available ? $xBlock : false;
     }
 
 }
