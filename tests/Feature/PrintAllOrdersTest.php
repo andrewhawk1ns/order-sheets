@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\PrintSheet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -19,7 +20,7 @@ class ExampleTest extends TestCase
             'type' => 'test',
         ]);
 
-        $printSheet = \App\PrintSheet::first();
+        $printSheet = PrintSheet::first();
 
         $response->assertStatus(201)->assertJson(['data' => [[
             'data' => [

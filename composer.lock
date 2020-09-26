@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58c84edb44f8b54acf15a49be54f116e",
+    "content-hash": "09a727f90bb3c77c4a01ff34d6e25afd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4414,6 +4414,101 @@
                 "test"
             ],
             "time": "2020-07-09T08:09:16+00:00"
+        },
+        {
+            "name": "mbezhanov/faker-provider-collection",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mbezhanov/faker-provider-collection.git",
+                "reference": "076c00f0d438f12ec7da0fdaadbfb7940913763e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mbezhanov/faker-provider-collection/zipball/076c00f0d438f12ec7da0fdaadbfb7940913763e",
+                "reference": "076c00f0d438f12ec7da0fdaadbfb7940913763e",
+                "shasum": ""
+            },
+            "require": {
+                "fzaninotto/faker": "^1.6",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "php-mock/php-mock": "^2.0",
+                "phpunit/phpunit": "^6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bezhanov\\Faker\\": "src/Faker"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marin Bezhanov",
+                    "email": "marin.bezhanov@gmail.com",
+                    "homepage": "http://marinbezhanov.com"
+                }
+            ],
+            "description": "A collection of custom providers for the Faker library",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2018-11-22T06:55:34+00:00"
+        },
+        {
+            "name": "mbezhanov/laravel-faker-provider-collection",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mbezhanov/laravel-faker-provider-collection.git",
+                "reference": "a17a1a0d3e65f00f7afb396dfe360af5ec62d3b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mbezhanov/laravel-faker-provider-collection/zipball/a17a1a0d3e65f00f7afb396dfe360af5ec62d3b3",
+                "reference": "a17a1a0d3e65f00f7afb396dfe360af5ec62d3b3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.1|^6.0|^7.0",
+                "mbezhanov/faker-provider-collection": "^1.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Bezhanov\\Faker\\Laravel\\FakerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bezhanov\\Faker\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marin Bezhanov",
+                    "email": "marin.bezhanov@gmail.com"
+                }
+            ],
+            "description": "A collection of custom Faker providers for your Laravel applications",
+            "keywords": [
+                "faker",
+                "laravel"
+            ],
+            "time": "2020-08-24T05:45:14+00:00"
         },
         {
             "name": "mockery/mockery",

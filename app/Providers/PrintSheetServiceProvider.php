@@ -4,22 +4,20 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class PrintSheetServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        $this->app->register(
-            \App\Providers\PrintSheetServiceProvider::class
-        );
+        $this->app->singleton(\App\Services\PrintSheetService\PrintSheetService::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
