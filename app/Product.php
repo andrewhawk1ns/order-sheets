@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -11,6 +10,12 @@ class Product extends Model
 
     public function getSizingAttribute($value)
     {
-        return Str::of($this->size)->explode('x');
+        if (empty($this->size)) {
+            return null;
+        }
+
+        $sizeArr = $this->size->explode('x');
+
+        return ['width' => $sizeArr[0], 'height' => sizeArr[1]];
     }
 }
