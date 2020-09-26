@@ -12,6 +12,11 @@ class PrintSheetTest extends TestCase
         $this->printSheetInstance = new PrintSheet;
 
         $this->sheet = $this->printSheetInstance->createSheet();
+
+        $this->columnBlock = $this->printSheetInstance->scanX(0, 0, 2);
+
+        $this->rowBlock = $this->printSheetInstance->scanY(0, 5);
+
     }
 
     /** @test */
@@ -32,35 +37,26 @@ class PrintSheetTest extends TestCase
     /** @test */
     public function sheet_returns_x_axis_grid_units_if_available()
     {
-        $columns = $this->printSheetInstance->scanX(0, 0, 2);
-
-        $this->assertIsArray($columns);
+        $this->assertIsArray($this->columnBlock);
     }
 
     /** @test */
     public function sheet_returns_y_axis_grid_units_if_available()
     {
 
-        $rows = $this->printSheetInstance->scanY(0, 5);
-
-        $this->assertIsArray($rows);
+        $this->assertIsArray($this->rowBlock);
     }
 
     /** @test */
     public function sheet_returns_correct_number_of_x_axis_grid_units()
     {
-
-        $columns = $this->printSheetInstance->scanX(0, 0, 2);
-
-        $this->assertCount(2, $columns);
+        $this->assertCount(2, $this->columnBlock);
     }
 
     /** @test */
     public function sheet_returns_correct_number_of_y_axis_grid_units()
     {
-
-        $rows = $this->printSheetInstance->scanY(0, 5);
-
-        $this->assertCount(5, $rows);
+        $this->assertCount(5, $this->rowBlock);
     }
+
 }
