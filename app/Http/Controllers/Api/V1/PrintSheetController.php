@@ -17,9 +17,11 @@ class PrintSheetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePrintSheet $request, PrintSheetService $printSheetInstance)
+    public function store(StorePrintSheet $request, PrintSheetService $printSheetService)
     {
         $orders = $request->orders ?? \App\Order::all();
+
+        $printSheetService->generateSheets($orders);
 
         return new PrintSheetCollection(PrintSheet::all());
     }
