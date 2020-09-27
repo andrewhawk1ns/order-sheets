@@ -2,28 +2,29 @@
 
 namespace Tests\Unit;
 
-use App\PrintSheet;
+use App\Models\Sheet;
 use PHPUnit\Framework\TestCase;
 
 class PrintSheetSheetTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->printSheetInstance = new PrintSheet;
+        parent::setUp();
 
-        $this->sheet = $this->printSheetInstance->createSheet();
+        $this->sheetInstance = new Sheet;
 
+        $this->sheet = $this->sheetInstance->createSheet();
+
+        $this->printSheetInstance = new Sheet;
     }
 
     /** @test */
     public function sheet_returns_correct_number_of_rows_and_columns()
     {
 
-        $rows = $this->sheet->count();
+        $rows = count($this->sheet);
 
-        $firstRow = $this->sheet->first();
-
-        $columns = count($firstRow);
+        $columns = count($this->sheet[0]);
 
         $this->assertEquals($rows, 15);
 

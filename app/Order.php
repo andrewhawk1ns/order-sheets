@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $guarded = [];
+    protected $table = 'orders';
 
     public function customer()
     {
@@ -18,6 +19,13 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function getTotalSizeAttribute()
+    {
+        return $this->items->reduce(function ($carry, $item) {
+            return $carry + $item->product->sizing->getTotalSize();
+        });
     }
 
 }

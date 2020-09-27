@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePrintSheet;
 use App\Http\Resources\PrintSheetCollection;
+use App\Order;
 use App\PrintSheet;
 use App\Services\PrintSheetService\PrintSheetService;
 use Illuminate\Http\Request;
@@ -19,9 +20,9 @@ class PrintSheetController extends Controller
      */
     public function store(StorePrintSheet $request, PrintSheetService $printSheetService)
     {
-        $orders = $request->orders ?? \App\Order::all();
+        $orders = Order::with('items', 'items.product');
 
-        $printSheetService->generateSheets($orders);
+        $printSheetService->processOrders($orders);
 
         return new PrintSheetCollection(PrintSheet::all());
     }

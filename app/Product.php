@@ -2,20 +2,17 @@
 
 namespace App;
 
+use App\Models\Size;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     protected $guarded = [];
 
-    public function getSizingAttribute($value)
+    public function getSizingAttribute()
     {
-        if (empty($this->size)) {
-            return null;
-        }
+        $sizeArr = !empty($this->size) ? explode('x', $this->size) : [0, 0];
 
-        $sizeArr = $this->size->explode('x');
-
-        return ['width' => $sizeArr[0], 'height' => sizeArr[1]];
+        return new Size($sizeArr[0], $sizeArr[1]);
     }
 }

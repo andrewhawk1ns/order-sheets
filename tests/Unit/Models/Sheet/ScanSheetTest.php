@@ -2,20 +2,19 @@
 
 namespace Tests\Unit;
 
-use App\PrintSheet;
+use App\Models\Sheet;
 use PHPUnit\Framework\TestCase;
 
-class PrintSheetScanTest extends TestCase
+class ScanSheetTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->printSheetInstance = new PrintSheet;
+        parent::setUp();
+        $this->sheetInstance = new Sheet;
 
-        $this->sheet = $this->printSheetInstance->createSheet();
+        $this->columnBlock = $this->sheetInstance->scanX(0, 0, 2);
 
-        $this->columnBlock = $this->printSheetInstance->scanX(0, 0, 2);
-
-        $this->rowBlock = $this->printSheetInstance->scanY(0, 0, 5);
+        $this->rowBlock = $this->sheetInstance->scanY(0, 0, 5);
 
     }
 
