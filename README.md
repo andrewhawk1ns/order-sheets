@@ -40,6 +40,14 @@ Generate Laravel's application key
 php artisan key:generate
 ```
 
+### Create the symbolic link
+
+Link the storage directory with the public directory
+
+```
+php artisan storage:link
+```
+
 ### Run the Project
 
 Run the dev server
