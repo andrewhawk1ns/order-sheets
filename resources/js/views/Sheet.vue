@@ -5,6 +5,9 @@
       <div class="text-center max-w-lg mx-auto py-8">
         <PDF :src="sheet.data.attributes.sheet_url" className="max-w-sm" />
       </div>
+      <div v-if="!!error">
+        <app-error-display :error="error" />
+      </div>
     </div>
     <div v-else>
       <app-loader :loading="loading" />

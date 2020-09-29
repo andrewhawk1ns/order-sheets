@@ -49,7 +49,6 @@ export default {
 
         this.sheets = sheets;
       } catch (error) {
-        console.log(error);
         this.error = error;
       }
 

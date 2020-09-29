@@ -26,6 +26,11 @@ class PrintImage extends Base
 
     }
 
+    /**
+     * Get the dimensions for the image being processed.
+     *
+     * @return void
+     */
     public function calculateDimensions(): void
     {
         list($width, $height) = getimagesize($this->filePath);
@@ -34,11 +39,21 @@ class PrintImage extends Base
         $this->height = $height;
     }
 
+    /**
+     * Get the image's aspect ratio.
+     *
+     * @return int
+     */
     public function getAspectRatio(): int
     {
         return $this->width / $this->height;
     }
 
+    /**
+     * Download an external file and return the content.
+     *
+     * @return string
+     */
     private function downloadExternalFile(): string
     {
         $context = stream_context_create(array('http' => array('header' => 'Connection: close\r\n')));
@@ -52,6 +67,12 @@ class PrintImage extends Base
         return $contents;
     }
 
+    /**
+     * Save the external image to the local file system.
+     *
+     * @param string $filePath
+     * @return string
+     */
     public function saveExternal(string $filePath): string
     {
 

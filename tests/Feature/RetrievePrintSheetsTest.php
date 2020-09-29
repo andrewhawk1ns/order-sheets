@@ -11,7 +11,7 @@ class RetrievePrintSheetsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function can_retrieve_print_sheets()
+    public function all_print_sheets_can_be_retrieved()
     {
 
         $this->withoutExceptionHandling();

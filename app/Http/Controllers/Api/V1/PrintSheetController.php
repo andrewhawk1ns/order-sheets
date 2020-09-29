@@ -26,7 +26,7 @@ class PrintSheetController extends Controller
      */
     public function store(StorePrintSheet $request, PrintSheetService $printSheetService, PrintSheetPDFService $pdfService)
     {
-        $orders = Order::with('items', 'items.product')->take(10);
+        $orders = Order::with('items', 'items.product', 'items.order');
 
         $storeResult = $printSheetService->processOrders($orders);
 

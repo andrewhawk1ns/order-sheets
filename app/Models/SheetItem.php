@@ -23,6 +23,11 @@ class SheetItem extends Base
         $this->item = $item;
     }
 
+    /**
+     * Get the sheet item's aspect ratio.
+     *
+     * @return int
+     */
     public function getAspectRatio(): int
     {
         if (!$this->height) {

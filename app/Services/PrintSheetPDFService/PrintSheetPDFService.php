@@ -2,6 +2,7 @@
 
 namespace App\Services\PrintSheetPDFService;
 
+use App\Exceptions\SheetsNotFoundException;
 use App\Models\PrintImage;
 use App\Models\PrintPDF;
 use App\Models\Sheet;
@@ -27,6 +28,11 @@ class PrintSheetPDFService
         $this->maybeCreatePlaceholder();
     }
 
+    /**
+     * Create the directories if they don't exist.
+     *
+     * @return void
+     */
     private function maybeCreateDirectories(): void
     {
         foreach ([$this->imageDirectory, '/app/public/pdf'] as $directory) {
@@ -38,6 +44,11 @@ class PrintSheetPDFService
         }
     }
 
+    /**
+     * Create a placeholder image to use if it doesn't exist.
+     *
+     * @return void
+     */
     private function maybeCreatePlaceholder(): void
     {
         if (!File::exists(storage_path($this->placeholderPath))) {
@@ -49,6 +60,13 @@ class PrintSheetPDFService
 
     }
 
+    /**
+     * Create a blank PDF instance.
+     *
+     * @param int $sheetKey
+     * @param  \App\Models\Sheet $sheet
+     * @return \App\Models\PrintPDF
+     */
     private function createPDF(int $sheetKey, \App\Models\Sheet $sheet): PrintPDF
     {
         $pdfView = PDF::loadHtml('', ['format' => 'Letter', 'orientation' => 'P']);
@@ -59,12 +77,27 @@ class PrintSheetPDFService
         return $pdf;
     }
 
+    /**
+     * Writes the sheets items to a PDF file
+     *
+     * @param  string $type
+     * @param  \App\Models\Sheet $sheet
+     * @return string
+     */
     private function clearImages()
     {
         $file = new Filesystem;
         $file->cleanDirectory(storage_path($this->imageDirectory));
     }
 
+    /**
+     * Crop the image to the unit of the sheet it is being placed in.
+     *
+     * @param int $key
+     * @param \App\Models\PrintImage $image
+     * @param  \App\Models\Sheet $sheetItem
+     * @return string
+     */
     private function cropImageToSheetUnit(int $key = 1, PrintImage $image, $sheetItem): string
     {
 
@@ -93,6 +126,13 @@ class PrintSheetPDFService
         return $croppedImagePath;
     }
 
+    /**
+     * Writes the sheet's items to a PDF file.
+     *
+     * @param  string $type
+     * @param  \App\Models\Sheet $sheet
+     * @return PrintSheet
+     */
     public function writeSheet(string $type = 'test', \App\Models\Sheet $sheet): PrintSheet
     {
 
@@ -130,27 +170,36 @@ class PrintSheetPDFService
 
         $sheet->pdf->save();
 
-        // var_dump($sheetItems);
-
         $printSheet->items()->insert($sheetItems);
 
         return $printSheet;
 
     }
 
+    /**
+     * Process the sheets and insert them into the database.
+     *
+     * @param  string $type
+     * @param  array $sheets
+     * @return \Illuminate\Support\Collection
+     */
     public function processSheets(string $type, array $sheets): Collection
     {
 
         $printedSheets = [];
 
-        foreach ($sheets as $sheetKey => $sheet) {
+        if (count($sheets) > 0) {
+            foreach ($sheets as $sheetKey => $sheet) {
 
-            $sheet->pdf = $this->createPDF($sheetKey, $sheet);
-            $printResult = $this->writeSheet($type, $sheet);
+                $sheet->pdf = $this->createPDF($sheetKey, $sheet);
+                $printResult = $this->writeSheet($type, $sheet);
 
-            $printedSheets[] = $printResult;
+                $printedSheets[] = $printResult;
 
-            $this->clearImages();
+                $this->clearImages();
+            }
+        } else {
+            throw new SheetsNotFoundException();
         }
 
         return collect($printedSheets);

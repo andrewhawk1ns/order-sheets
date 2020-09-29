@@ -5,7 +5,11 @@ const axiosInstance = axios.create({baseURL:process.env.MIX_APP_URL})
 axiosInstance.interceptors.response.use(({data}) => {
     return data;
 }, (error) => {
-    return Promise.reject(error.message);
+
+    if(error.response.data.errors) {
+        return Promise.reject(JSON.stringify(error.response.data.errors.detail));
+    }
+    return Promise.reject(JSON.stringify(error.response.data));
 });
 
 export default {

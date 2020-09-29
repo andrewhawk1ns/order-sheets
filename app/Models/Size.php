@@ -16,6 +16,11 @@ class Size extends Base
         $this->height = $height;
     }
 
+    /**
+     * Get the total size that would be taken on the sheet.
+     *
+     * @return int
+     */
     public function getTotalSize(): int
     {
         return $this->width * $this->height;

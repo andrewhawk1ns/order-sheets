@@ -41,4 +41,21 @@ class PrintAllOrdersTest extends TestCase
             ]],
         ]]);
     }
+
+    /** @test */
+    public function cannot_print_if_there_are_no_orders()
+    {
+
+        $response = $this->post('/api/print-sheets', [
+            'type' => 'test',
+        ]);
+
+        $response->assertStatus(404)->assertJson([
+            'errors' => [
+                'code' => 404,
+                'title' => 'No Orders Found',
+                'detail' => 'No orders available to process to sheets.',
+            ],
+        ]);
+    }
 }

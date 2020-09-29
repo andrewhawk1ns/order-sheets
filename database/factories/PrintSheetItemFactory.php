@@ -16,7 +16,7 @@ $factory->define(PrintSheetItem::class, function (Faker $faker) {
         'y_pos' => $faker->numberBetween(0, 15),
         'width' => $faker->randomNumber(5),
         'height' => $faker->randomNumber(5),
-        'identifier' => $faker->sentence(3),
+        'identifier' => $faker->word,
         'print_sheet_id' => factory(PrintSheet::class),
         'order_item_id' => factory(OrderItem::class),
     ];
