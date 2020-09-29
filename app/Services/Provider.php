@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Providers;
+namespace App\Services;
 
 use Illuminate\Support\ServiceProvider;
 
-class PrintSheetServiceProvider extends ServiceProvider
+class Provider extends ServiceProvider
 {
     /**
      * Register services.
@@ -14,6 +14,7 @@ class PrintSheetServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(\App\Services\PrintSheetService\PrintSheetService::class);
+        $this->app->singleton(\App\Services\PrintSheetPDFService\PrintSheetPDFService::class);
     }
 
     /**

@@ -49,7 +49,7 @@ class ProcessOrdersTest extends TestCase
 
         $result = $this->printSheetServiceInstance->processOrders(Order::with('items', 'items.product'));
 
-        $this->assertCount(30, $result->getOrdersProcessed());
+        $this->assertCount(30, $result->ordersProcessed);
     }
 
 }

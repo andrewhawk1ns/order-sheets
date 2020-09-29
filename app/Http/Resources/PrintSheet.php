@@ -19,6 +19,8 @@ class PrintSheet extends JsonResource
                 'type' => 'print-sheets',
                 'print_sheet_id' => $this->id,
                 'attributes' => [
+                    'created_at' => $this->created_at,
+                    'updated_at' => $this->updated_at,
                     'type' => $this->type,
                     'sheet_url' => $this->sheet_url,
                 ],

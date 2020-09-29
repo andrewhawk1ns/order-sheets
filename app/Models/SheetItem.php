@@ -2,42 +2,33 @@
 
 namespace App\Models;
 
-class SheetItem
+class SheetItem extends Base
 {
-    private $width;
+    protected $width;
 
-    private $height;
+    protected $height;
 
-    private $x;
+    protected $x;
 
-    private $y;
+    protected $y;
 
-    public function __construct($x, $y, $width, $height)
+    protected $item;
+
+    public function __construct($item, int $x, int $y, int $width, int $height)
     {
         $this->width = $width;
         $this->height = $height;
         $this->x = $x;
         $this->y = $y;
+        $this->item = $item;
     }
 
-    public function getX()
+    public function getAspectRatio(): int
     {
-        return $this->x;
-    }
-
-    public function getY()
-    {
-        return $this->y;
-    }
-
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    public function getWidth()
-    {
-        return $this->width;
+        if (!$this->height) {
+            throw new Exception(__METHOD__ . ":Dividing by zero.");
+        }
+        return $this->width / $this->height;
     }
 
 }

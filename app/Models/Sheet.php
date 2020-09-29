@@ -2,39 +2,45 @@
 
 namespace App\Models;
 
+use App\Models\Base;
 use App\Models\SheetItem;
+use Exception;
 
-class Sheet
+class Sheet extends Base
 {
-    protected $guarded = [];
-
     protected $spaceAvailable;
 
-    protected $sheet = null;
+    protected $sheet;
 
-    private $queueSheet = null;
+    private $queueSheet;
 
     private $scanIndex;
 
     private $queueAvailable;
 
-    private $queue;
+    protected $rows;
 
-    private $rows;
+    protected $columns;
 
-    private $columns;
+    protected $store;
 
-    private $store;
+    protected $queue;
 
-    private $elastic = false;
+    protected $pdf;
 
-    public function __construct($elastic = false, $rows = 15, $columns = 10)
+    protected $elastic = false;
+
+    protected $fresh;
+
+    public function __construct(bool $elastic = false, int $rows = 15, int $columns = 10)
     {
         $this->queue = [];
 
         $this->rows = $rows;
 
         $this->columns = $columns;
+
+        $this->fresh = true;
 
         $this->elastic = $elastic;
 
@@ -45,22 +51,12 @@ class Sheet
         }
     }
 
-    public function getSheet()
-    {
-        return $this->sheet;
-    }
-
-    public function getSpaceAvailable()
-    {
-        return $this->spaceAvailable;
-    }
-
     /**
      * Creates a new print sheet grid and available print sheet grid index.
      *
      * @return array
      */
-    public function createSheet()
+    public function createSheet(): array
     {
         $sheet = $queueSheet = $scanIndex = [];
 
@@ -78,14 +74,14 @@ class Sheet
         return $this->sheet;
     }
 
-    public function clearQueue()
+    public function clearQueue(): void
     {
         $this->queue = $this->store;
         $this->queueSheet = $this->sheet;
         $this->queueAvailable = $this->spaceAvailable;
     }
 
-    public function commit()
+    public function commit(): void
     {
         $this->sheet = $this->queueSheet;
 
@@ -93,12 +89,17 @@ class Sheet
 
         $this->store = $this->queue;
 
+        $this->fresh = false;
+
         $this->clearQueue();
 
     }
 
-    private function addRows($height)
+    private function addRows(int $height): void
     {
+        if (!$height) {
+            throw new Exception(__METHOD__ . ":Invalid height provided to add rows ( $height )");
+        }
         $rows = range($this->rows, $this->rows + $height - 1);
 
         $start = $this->rows + $rows[0];
@@ -113,13 +114,15 @@ class Sheet
         }
     }
 
-    private function addColumns($width)
+    private function addColumns(int $width): void
     {
+        if (!$width) {
+            throw new Exception(__METHOD__ . ":Invalid width provided to add rows ( $width )");
+        }
         $columns = range($this->columns, $this->columns + $width - 1);
 
+        $start = $this->columns + $columns[0];
         $this->columns += $width;
-
-        $start = $this->rows + $rows[0];
 
         for ($row = 0; $row < $this->rows; $row++) {
             for ($column = $start; $column < $this->columns; $column++) {
@@ -128,12 +131,12 @@ class Sheet
         }
     }
 
-    private function checkProportion()
+    private function checkProportion(): int
     {
         return $this->rows < (3 * $this->columns);
     }
 
-    public function addToQueue($width = 0, $height = 0, $orderItemId = 1)
+    public function addToQueue($item, int $width = 0, int $height = 0)
     {
 
         $location = $this->scanNextAvailable($width, $height);
@@ -143,8 +146,10 @@ class Sheet
             if ($this->elastic) {
                 if ($width > $height && $this->checkProportion()) {
                     $this->rows += $height;
+                    $this->addRows($height);
                 } else {
                     $this->columns += $width;
+                    $this->addColumns($width);
                 }
             }
 
@@ -152,11 +157,13 @@ class Sheet
 
             $this->removeScanBlock($location['x'], $location['y']);
 
-            $this->queue[$orderItemId] = new SheetItem($location['x'][0], $location['y'][0], $width, $height);
+            $sheetItem = new SheetItem($item, $location['x'][0], $location['y'][0], $width, $height);
+
+            $this->queue[] = $sheetItem;
 
             foreach ($location['y'] as $row) {
                 foreach ($location['x'] as $col) {
-                    $this->queueSheet[$row][$col] = $orderItemId;
+                    $this->queueSheet[$row][$col] = $sheetItem;
                 }
             }
         }
@@ -164,7 +171,7 @@ class Sheet
         return $location;
     }
 
-    public function scanNextAvailable($width, $height)
+    public function scanNextAvailable(int $width, int $height)
     {
 
         $found = false;
@@ -198,7 +205,7 @@ class Sheet
         return $found ? ['x' => $xBlock, 'y' => $yBlock] : false;
     }
 
-    private function removeScanBlock($xBlock, $yBlock)
+    private function removeScanBlock(array $xBlock, array $yBlock): void
     {
         foreach ($yBlock as $row) {
             foreach ($xBlock as $col) {
@@ -213,7 +220,7 @@ class Sheet
 
     }
 
-    public function scanY($column, $start, $height)
+    public function scanY(int $column, int $start, int $height)
     {
         $yBlock = range($start, $start + $height - 1);
 
@@ -232,7 +239,7 @@ class Sheet
         return $available ? $yBlock : false;
     }
 
-    public function scanX($row, $start, $width)
+    public function scanX(int $row, int $start, int $width)
     {
         $xBlock = range($start, $start + $width - 1);
 

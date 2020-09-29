@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 
         factory(Customer::class, 5)->create();
 
-        factory(Order::class, 20)->create(['customer_id' => 1])->each(function ($order) {
+        factory(Order::class, 5)->create(['customer_id' => 1])->each(function ($order) {
             for ($i = 0; $i < rand(1, 20); $i++) {
                 $order->items()->save(factory(OrderItem::class, ['order_id' => $order->id])->make());
             }

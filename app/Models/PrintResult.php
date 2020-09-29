@@ -2,27 +2,17 @@
 
 namespace App\Models;
 
-class PrintResult
+class PrintResult extends Base
 {
-    private $sheets;
+    protected $sheets;
 
-    private $ordersProcessed;
+    protected $orders;
 
-    public function __construct($sheets, $ordersProcessed)
+    public function __construct(array $sheet, array $sheetItems)
     {
-        $this->sheets = $sheets;
-        $this->ordersProcessed = $ordersProcessed;
+        $this->sheet = $sheet;
+        $this->sheetItems = $sheetItems;
 
-    }
-
-    public function getSheets()
-    {
-        return $this->sheets;
-    }
-
-    public function getOrdersProcessed()
-    {
-        return $this->ordersProcessed;
     }
 
 }

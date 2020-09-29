@@ -2,29 +2,21 @@
 
 namespace App\Models;
 
-class Size
+use App\Models\Base;
+
+class Size extends Base
 {
-    private $width;
+    protected $width;
 
-    private $height;
+    protected $height;
 
-    public function __construct($width, $height)
+    public function __construct(int $width, int $height)
     {
         $this->width = $width;
         $this->height = $height;
     }
 
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    public function getTotalSize()
+    public function getTotalSize(): int
     {
         return $this->width * $this->height;
     }

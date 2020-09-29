@@ -1,56 +1,53 @@
 <template>
-  <div class="text-center py-4">
+  <div class="container mx-auto text-center">
+    <h1 class="text-lg font-bold">Sheets</h1>
     <div v-if="!loading">
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 focus:outline-none"
-        @click.prevent="handlePrintAll"
-      >
-        Print Orders
-      </button>
       <div v-if="!!error">
-        <app-error-display />
+        <app-error-display :error="error" />
       </div>
-      <div v-if="sheets.data && sheets.data.length > 0">
-        <p>Sheets were generated successfully.</p>
-        <p><router-link to="/sheets">View Sheets</router-link></p>
+      <div v-if="sheets.data && sheets.data.length > 0" class="py-8">
+        <app-sheet-archive :sheets="sheets.data" />
       </div>
     </div>
-
     <div v-else>
       <app-loader :loading="loading" />
     </div>
+    <app-back-button />
   </div>
 </template>
 
 <script>
 import printSheets from "../api/printSheets";
+import SheetArchive from "../components/SheetArchive.vue";
 import ErrorDisplay from "../components/ErrorDisplay.vue";
+import BackButton from "../components/BackButton.vue";
 import Loader from "../components/Loader.vue";
 
 export default {
-  name: "Home",
+  name: "Sheets",
+  mounted() {
+    this.fetchSheets();
+  },
   data: () => ({
     error: "",
     loading: false,
     sheets: []
   }),
   components: {
+    appSheetArchive: SheetArchive,
     appErrorDisplay: ErrorDisplay,
-    appLoader: Loader
+    appLoader: Loader,
+    appBackButton: BackButton
   },
   methods: {
-    async handlePrintAll() {
+    async fetchSheets() {
       this.error = "";
       this.sheets = [];
       this.loading = true;
       try {
-        const sheets = await printSheets.createSheets({
-          type: "test"
-        });
+        const sheets = await printSheets.getSheets();
 
         this.sheets = sheets;
-
-        console.log(this.sheets);
       } catch (error) {
         console.log(error);
         this.error = error;

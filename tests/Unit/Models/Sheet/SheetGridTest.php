@@ -13,7 +13,7 @@ class PrintSheetSheetTest extends TestCase
 
         $this->sheetInstance = new Sheet;
 
-        $this->sheet = $this->sheetInstance->createSheet();
+        $this->sheet = $this->sheetInstance;
 
         $this->printSheetInstance = new Sheet;
     }
@@ -22,9 +22,9 @@ class PrintSheetSheetTest extends TestCase
     public function sheet_returns_correct_number_of_rows_and_columns()
     {
 
-        $rows = count($this->sheet);
+        $rows = count($this->sheet->sheet);
 
-        $columns = count($this->sheet[0]);
+        $columns = count($this->sheet->sheet[0]);
 
         $this->assertEquals($rows, 15);
 
